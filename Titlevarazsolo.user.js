@@ -11,7 +11,7 @@
 (function () {
     'use strict';
 
-    
+
     function ncoreGetCleanTitle() {
         const infoBar = document.querySelector('.infobar_title');
         if (!infoBar) return null;
@@ -32,6 +32,32 @@
         return hasHDR ? `HDR | ${quality}` : quality;
     }
 
+
+    function ncoreAddMovieDriveSearchLink(title) {
+        const infoBar = document.querySelector('.infobar_title');
+        if (!infoBar) return;
+
+
+        if (infoBar.querySelector('.mdn-search-link')) return;
+
+        const encodedTitle = title.replace(/\s+/g, '+');
+        const url = `https://admin.moviedrive.hu/filmek/?q=${encodedTitle}`;
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.innerText = ' keress mdn';
+        link.target = '_blank';
+        link.className = 'mdn-search-link';
+        link.style.marginLeft = '8px';
+        link.style.fontSize = '12px';
+        link.style.color = '#4aa3ff';
+        link.style.cursor = 'pointer';
+        link.style.textDecoration = 'underline';
+
+        infoBar.appendChild(link);
+    }
+
+
     function ncoreUpdateTitle() {
         const title = ncoreGetCleanTitle();
         if (!title) return;
@@ -41,6 +67,10 @@
         } else {
             document.title = title;
         }
+
+
+        ncoreAddMovieDriveSearchLink(title);
+        
     }
 
     function ncoreUpdateSearchPageTitle() {
@@ -52,7 +82,7 @@
         document.title = `🔎 | ${value}`;
     }
 
-    
+
     function movieDriveUpdateTitle() {
         const input = document.querySelector('#title');
         if (!input) return;
@@ -61,9 +91,9 @@
 
         let prefix = '';
         if (location.href.includes('/editSorozat/')) {
-            prefix = 'Sor.';
+            prefix = 'S.';
         } else if (location.href.includes('/editMovie/')) {
-            prefix = 'Film';
+            prefix = 'F.';
         } else {
             return;
         }
@@ -71,7 +101,7 @@
         document.title = `${prefix} | ${value}`;
     }
 
-    
+
     function run() {
         if (location.hostname === 'ncore.pro') {
             ncoreUpdateTitle();
